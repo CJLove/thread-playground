@@ -15,6 +15,11 @@ $ sudo docker run --rm -d --name threadtest --cap-add SYS_NICE fir.love.io:3005/
 
 It seems like this container can be run rootless with Podman provided that the user's `ulimit -r` limit is `unlimited`.  This limit is set via `/etc/security/limits.conf`:
 
+```
+@love		hard	rtprio		 -1
+@love		soft	rtprio		 -1
+```
+
 ```bash
 $ podman run --rm -d --name threadtest2 fir.love.io:3005/threadtest:latest
 ```
