@@ -73,6 +73,7 @@ int main(int /* argc */, char** /* argv */) {
     thread::setScheduling(thread1, SCHED_RR, 2);
     thread::setScheduling(thread2, SCHED_FIFO, 1);
 
+
     {
         std::lock_guard<std::mutex> guard(logMutex);
         std::cout << "Starting Thread 1: " << thread::getName(thread1) << "\n";
