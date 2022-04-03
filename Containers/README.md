@@ -1,7 +1,7 @@
 # Containers with real-time threads
 
 ## Image
-The `threadtest` directory holds a Dockerfile building an image running the `thread` app which starts 1 thread in SCHED_RR with priority 2, 1 thread in SCHED_FIFO with priority 1, and 1 thread in SCHED_OTHER.
+The `threadtest` directory holds a Dockerfile building an image running the `thread` app which starts 1 thread in SCHED_RR with priority 90, 1 thread in SCHED_FIFO with priority 50, and 1 thread in SCHED_OTHER.
 
 ## CentOS 7.9 w/Docker 
 Docker needs to be configured with rt threads enabled by adding `--cpu-rt-runtime=950000` to the `ExecStart` line in `/usr/lib/systemd/system/docker.service` and restarting the Docker service.  This container can then be run with regular Docker adding the `SYS_NICE` capability:
@@ -30,6 +30,17 @@ $ ps -cT -p 31477
 31477 31505 FF   90 ?        00:00:00 MyFIFOThread
 31477 31506 TS   19 ?        00:00:00 MyOtherThread
 ```
+
+## Container debugging
+The `threadtestdebug` directory holds a Dockerfile for building an image running the `thread` app under `gdbserver`. It can be debugged using `gdb` from another host as follows:
+
+```bash
+$ gdb thread
+(gdb) target remote localhost:2000
+(gdb) c
+```
+
+This requires additiona parameters when starting the container: `-p 2000:2000 --cap-add=SYS_PTRACE`
 
 ## Podman (e.g. Fedora)
 
