@@ -31,6 +31,7 @@ public:
     using std::thread::detach;
     using std::thread::joinable;
     using std::thread::get_id;
+    using std::thread::native_handle;
     using std::thread::hardware_concurrency;
 
     void swap(thread& x) { std::thread::swap(x); }

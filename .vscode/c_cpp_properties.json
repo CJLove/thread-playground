@@ -6,7 +6,7 @@
                 "${workspaceFolder}/thread"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/opt/rh/devtoolset-7/root/usr/bin/g++",
             "cStandard": "c11",
             "cppStandard": "c++14",
             "browse": {

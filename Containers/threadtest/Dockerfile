@@ -1,8 +1,8 @@
-FROM fedora-minimal:34
+FROM centos:7
 
 ADD thread /
 
 RUN \
-    microdnf install -y procps libstdc++
+    yum install -y procps libstdc++
 
 CMD [ "/thread" ]
