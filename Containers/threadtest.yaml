@@ -32,4 +32,6 @@ items:
               capabilities:
                 add:
                   - SYS_NICE
+          nodeSelector:
+            cputype: amd64
 
