@@ -102,6 +102,18 @@ int main(int /* argc */, char** /* argv */) {
     dumpLimit(limit.rlim_max, std::cout);
     std::cout << "\n";
 
+    std::cout << "Calling setrlimit()\n";
+    limit.rlim_cur = -1;
+    limit.rlim_max = -1;
+    setrlimit(RLIMIT_RTPRIO, &limit);
+
+    getrlimit(RLIMIT_RTPRIO, &limit);
+    std::cout << "rlim_cur ";
+    dumpLimit(limit.rlim_cur, std::cout);
+    std::cout << " rlim_max ";
+    dumpLimit(limit.rlim_max, std::cout);
+    std::cout << "\n";
+    
     std::thread thread1(thread1Func);
     thread::setName(thread1, "MyRRThread");
     thread::setScheduling(thread1, SCHED_RR, 90);
