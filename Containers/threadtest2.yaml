@@ -5,14 +5,14 @@ items:
   - apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: threadtest
+      name: threadtest2
       labels:
-        app: threadtest
+        app: threadtest2
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: threadtest
+          app: threadtest2
       strategy:
         type: RollingUpdate
         rollingUpdate:
@@ -21,13 +21,13 @@ items:
       template:
         metadata:
           labels:
-            app: threadtest
+            app: threadtest2
           annotations:
             realtime: "true"
-            rt_runtime_us: "50000"
+            rt_runtime_us: "25000"
         spec:
           containers:
-          - name: threadtest
+          - name: threadtest2
             image: fir.love.io:3005/threadtest:latest
             imagePullPolicy: Always
             resources:
