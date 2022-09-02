@@ -4,7 +4,6 @@ cp ../build/bin/thread threadtest
 cp ../build/bin/thread threadtestdebug
 
 cd threadtest
-#podman build --format docker -t threadtest:latest -t fir.love.io:3005/threadtest:latest .
 docker build -t threadtest:latest -t fir.love.io:3005/threadtest:latest .
 docker push fir.love.io:3005/threadtest:latest
 

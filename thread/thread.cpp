@@ -23,7 +23,7 @@ void thread1Func() {
         std::this_thread::sleep_for(15s);
         {
             std::lock_guard<std::mutex> guard(logMutex);
-            std::cout << "Hello from thread1\n";
+            std::cout << "Hello from thread1" << std::endl;
         }
     }
 }
@@ -38,7 +38,7 @@ void thread2Func() {
         std::this_thread::sleep_for(20s);
         {
             std::lock_guard<std::mutex> guard(logMutex);
-            std::cout << "Hello from thread2\n";
+            std::cout << "Hello from thread2" << std::endl;
         }
     }
 }
@@ -53,7 +53,7 @@ void thread3Func() {
         std::this_thread::sleep_for(60s);
         {
             std::lock_guard<std::mutex> guard(logMutex);
-            std::cout << "Hello from thread3\n";
+            std::cout << "Hello from thread3" << std::endl;
         }
     }    
 }
@@ -88,6 +88,24 @@ std::ostream &dumpLimit(rlim_t limit, std::ostream &os) {
     return os;
 }
 
+int waitForRt(int policy, int priority, int retries = 20)
+{
+    sched_param schedParams;
+    schedParams.sched_priority = priority;
+    int tries = 0;
+    std::cout << "Waiting for process to get rt scheduling capabilities\n";
+    while (tries < retries) {
+        if (pthread_setschedparam(pthread_self(), policy, &schedParams) == 0 ) {
+            std::cout << "Process has rt scheduling capability/capacity\n";
+            return 0;
+        }
+        std::cerr << "Try " << tries << " of " << retries << ": Failed to set Thread scheduling : " << std::strerror(errno) << "\n";
+        std::this_thread::sleep_for(std::chrono::seconds(15));
+        tries++;
+    }
+    return -1;
+}
+
 int main(int /* argc */, char** /* argv */) {
     pid_t pid = getpid();
     pid_t ppid = getppid();
@@ -113,6 +131,9 @@ int main(int /* argc */, char** /* argv */) {
     std::cout << " rlim_max ";
     dumpLimit(limit.rlim_max, std::cout);
     std::cout << "\n";
+
+    // Wait up to 5 minutes for this process to get RT capabilities
+    waitForRt(SCHED_RR, 5, 20);
     
     std::thread thread1(thread1Func);
     thread::setName(thread1, "MyRRThread");
