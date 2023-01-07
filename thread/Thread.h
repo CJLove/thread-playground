@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstring>
 #include <iostream>
 #include <pthread.h>
@@ -15,6 +16,7 @@ namespace thrd {
  */
 class thread : private std::thread {
 public:
+    static constexpr size_t THREAD_NAME_MAX = 15;
     //using std::thread::thread;
     thread() = default;
     thread(thread&&) = default;
@@ -31,7 +33,6 @@ public:
     using std::thread::detach;
     using std::thread::joinable;
     using std::thread::get_id;
-    using std::thread::native_handle;
     using std::thread::hardware_concurrency;
 
     void swap(thread& x) { std::thread::swap(x); }
@@ -46,9 +47,9 @@ public:
      * @param args - arguments to thread function
      */
     template< class Function, typename... Args >
-    explicit thread( Function&& f, std::string name, Args&&... args): 
+    explicit thread( Function&& f, const std::string &name, Args&&... args): 
         std::thread(f, std::forward<Args>(args)...) {
-        setName(*this,name.c_str());
+        setName(*this,name);
     }
 
     /**
@@ -79,9 +80,9 @@ public:
      * @param args - arguments to thread function
      */
     template< class Function, typename... Args >
-    explicit thread( Function&& f, std::string name, int policy, int priority, Args&&... args): 
+    explicit thread( Function&& f, const std::string &name, int policy, int priority, Args&&... args): 
         std::thread(f, std::forward<Args>(args)...) {
-        setName(*this,name.c_str());
+        setName(*this,name);
         setScheduling(*this,policy,priority);
     }    
 
@@ -114,8 +115,8 @@ public:
     static void setScheduling(std::thread &th, int policy, int priority) {
         sched_param schedParams;
         schedParams.sched_priority = priority;
-        if (pthread_setschedparam(th.native_handle(), policy, &schedParams)) {
-            std::cerr << "Failed to set Thread scheduling : " << std::strerror(errno) << "\n";
+        if (pthread_setschedparam(th.native_handle(), policy, &schedParams) != 0) {
+            std::cerr << "Failed to set Thread scheduling: errno " << errno << "\n";
         }
     }
 
@@ -128,8 +129,8 @@ public:
      */
     static sched_param getScheduling(std::thread &th, int &policy) {
         sched_param schedParams;
-        if (pthread_getschedparam(th.native_handle(), &policy, &schedParams)) {
-            std::cerr << "Failed to get Thread schedulign : " << std::strerror(errno) << "\n";
+        if (pthread_getschedparam(th.native_handle(), &policy, &schedParams) != 0) {
+            std::cerr << "Failed to get Thread schedulign: errno " << errno << "\n";
         }
         return schedParams;
     }
@@ -140,9 +141,9 @@ public:
      * @param th - std::thread
      * @param name - thread name
      */
-    static void setName(std::thread &th, std::string name) {
-        if (pthread_setname_np(th.native_handle(), name.c_str())) {
-            std::cerr << "Failed to set Thread name : " << std::strerror(errno) << "\n";
+    static void setName(std::thread &th, const std::string &name) {
+        if (pthread_setname_np(th.native_handle(), name.c_str()) != 0) {
+            std::cerr << "Failed to set Thread name: errno " << errno << "\n";
         }
     }
 
@@ -153,11 +154,11 @@ public:
      * @return std::string - thread name
      */
     static std::string getName(std::thread &th) {
-        char buf[256];
-        if (pthread_getname_np(th.native_handle(), buf, sizeof(buf))) {
-            std::cerr << "Failed to get Thread name : " << std::strerror(errno) << "\n";
+        std::array<char,THREAD_NAME_MAX> buf;
+        if (pthread_getname_np(th.native_handle(), buf.data(), sizeof(buf)) != 0) {
+            std::cerr << "Failed to get Thread name: errno " << errno << "\n";
         }
-        return std::string(buf);
+        return std::string { buf.data() };
     }
 
 };
