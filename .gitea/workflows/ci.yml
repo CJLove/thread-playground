@@ -1,0 +1,51 @@
+name: ci
+
+on: [push]
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    # Use container with docker installed
+    container: 
+      image: catthehacker/ubuntu:act-latest
+      volumes:
+        # Need to pass /etc/certs through to the custom container
+        - /etc/certs:/etc/certs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: cd ${{ gitea.workspace }}
+      - name: Check /etc/certs
+        run: ls /etc/certs
+      - name: Build
+        uses: https://github.com/addnab/docker-run-action@v3
+        with:
+          image: fir.love.io:3005/amd64/rhel8-gcc850:latest
+          options: --rm --volumes-from=${{ env.JOB_CONTAINER_NAME }}
+          run: |
+            g++ --version
+            cmake3 --version
+            cd ${{ gitea.workspace }}
+            mkdir build
+            cd build
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. $PWD/..
+            make install
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            debug = true
+            [registry."fir.love.io:3005"]
+            ca=["/etc/certs/ca.crt"]      
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Containers/threadtest
+          file: ./Containers/threadtest/Dockerfile
+          push: true
+          tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/threadtest:${{ github.run_number }}
+          platforms: linux/amd64
+         

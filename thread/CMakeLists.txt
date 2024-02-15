@@ -14,4 +14,4 @@ set (thread_SRC thread.cpp)
 add_executable( thread ${thread_SRC})
 target_link_libraries( thread pthread rt )
 
-install(TARGETS thread DESTINATION bin)
+install(TARGETS thread DESTINATION Containers/threadtest)

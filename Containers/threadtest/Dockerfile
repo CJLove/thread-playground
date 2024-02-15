@@ -1,9 +1,9 @@
-FROM centos:7
+FROM registry.access.redhat.com/ubi8:latest
 
 ADD thread /
 
 RUN \
-    yum install -y procps libstdc++ net-tools iproute && \
+    dnf install -y procps libstdc++ net-tools iproute && \
     echo "*     soft rtprio unlimited" >> /etc/security/limits.conf && \
     echo "*     hard rtprio unlimited" >> /etc/security/limits.conf
 
