@@ -55,7 +55,7 @@ jobs:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
           username: Gitea
           avatar-url: https://about.gitea.com/gitea-text.svg
-          content: "${{ gitea.repository }} branch ${{ gitea.ref }} build :x:"
+          content: "Repo ${{ gitea.repository }} branch ${{ gitea.ref }} build :x:"
       - name: Report success
         if: success()
         uses: tsickert/discord-webhook@v5.4.0
@@ -63,7 +63,7 @@ jobs:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
           username: Gitea
           avatar-url: https://about.gitea.com/gitea-text.svg
-          content: "${{ gitea.repository }} branch ${{ gitea.ref }} build :white_check_mark:"
+          content: "Repo ${{ gitea.repository }} branch ${{ gitea.ref }} build :white_check_mark:"
 
 
          
