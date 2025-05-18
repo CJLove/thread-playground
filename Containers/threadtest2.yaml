@@ -28,7 +28,7 @@ items:
         spec:
           containers:
           - name: threadtest2
-            image: fir.love.io:3005/threadtest:latest
+            image: harbor.love.io/library/threadtest:latest
             imagePullPolicy: Always
             resources:
               limits:
@@ -38,7 +38,6 @@ items:
                 memory: "200Mi"
                 cpu: "700m"
             securityContext:
-              privileged: true
               capabilities:
                 add:
                   - SYS_NICE
