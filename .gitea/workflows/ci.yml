@@ -52,7 +52,7 @@ jobs:
           context: ./Containers/threadtest
           file: ./Containers/threadtest/Dockerfile
           push: true
-          tags: harbor.love.io/test/threadtest:latest, harbor.love.io/test/threadtest:${{ github.run_number }}
+          tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/test/threadtest:${{ github.run_number }}
           platforms: linux/amd64
       - name: Report failure
         if: failure()
