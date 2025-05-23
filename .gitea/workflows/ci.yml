@@ -48,7 +48,7 @@ jobs:
             debug = true
             # [registry."fir.love.io:3005"]
             [registry."harbor.love.io"]
-            ca=["/etc/certs/ca.crt"]      
+              ca=["/etc/certs/ca.crt"]      
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
