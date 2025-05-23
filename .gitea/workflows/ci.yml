@@ -44,7 +44,8 @@ jobs:
         with:
           config-inline: |
             debug = true
-            [registry."fir.love.io:3005"]
+            # [registry."fir.love.io:3005"]
+            [registry."harbor.love.io"]
             ca=["/etc/certs/ca.crt"]      
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -52,9 +53,8 @@ jobs:
           context: ./Containers/threadtest
           file: ./Containers/threadtest/Dockerfile
           push: true
-          tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/test/threadtest:${{ github.run_number }}
-            # - harbor.love.io/test/threadtest:latest
-            # - harbor.love.io/test/threadtest:${{ github.run_number }}
+          #tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/test/threadtest:${{ github.run_number }}
+          tags: harbor.love.io/test/threadtest:latest, harbor.love.io/test/threadtest:${{ github.run_number }}
           platforms: linux/amd64
       - name: Report failure
         if: failure()
