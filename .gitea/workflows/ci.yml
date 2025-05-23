@@ -35,21 +35,21 @@ jobs:
             cd build
             cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$PWD/.. $PWD/..
             make install
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            debug = true
+            [registry."fir.love.io:3005"]
+              ca=["/etc/certs/ca.crt"]
+            [registry."harbor.love.io"]
+              ca=["/etc/certs/ca.crt"]      
       - name: Login to Harbor
         uses: docker/login-action@v3
         with:
           registry: harbor.love.io
           username: ${{ secrets.HARBOR_ROBOT }}
           password: ${{ secrets.HARBOR_SECRET }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          buildkitd-config-inline: |
-            debug = true
-            [registry."fir.love.io:3005"]
-              ca=["/etc/certs/ca.crt"]
-            [registry."harbor.love.io"]
-              ca=["/etc/certs/ca.crt"]      
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
