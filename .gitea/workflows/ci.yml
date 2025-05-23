@@ -19,7 +19,9 @@ jobs:
         uses: actions/checkout@v3
       - run: cd ${{ gitea.workspace }}
       - name: Check /etc/certs
-        run: ls /etc/certs
+        run: |
+          ls /etc/certs
+          md5sum /etc/certs/ca.crt
       - name: Build
         uses: https://github.com/addnab/docker-run-action@v3
         with:
@@ -42,7 +44,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          config-inline: |
+          buildkitd-config-inline: |
             debug = true
             # [registry."fir.love.io:3005"]
             [registry."harbor.love.io"]
