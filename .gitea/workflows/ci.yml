@@ -44,7 +44,7 @@ jobs:
             [registry."fir.love.io:3005"]
               ca=["/etc/certs/ca.crt"]
             [registry."harbor.love.io"]
-              ca=["/etc/certs/ca.crt"]
+              #ca=["/etc/certs/ca.crt"]
               insecure = true
 
       - name: Login to Harbor
