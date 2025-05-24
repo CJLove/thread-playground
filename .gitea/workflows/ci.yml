@@ -25,7 +25,8 @@ jobs:
       - name: Build
         uses: https://github.com/addnab/docker-run-action@v3
         with:
-          image: fir.love.io:3005/amd64/rhel8-gcc850:latest
+          #image: fir.love.io:3005/amd64/rhel8-gcc850:latest
+          image: harbor.love.io/test/rhel8-gcc850:latest
           options: --rm --volumes-from=${{ env.JOB_CONTAINER_NAME }}
           run: |
             g++ --version
@@ -43,7 +44,8 @@ jobs:
             [registry."fir.love.io:3005"]
               ca=["/etc/certs/ca.crt"]
             [registry."harbor.love.io"]
-              ca=["/etc/certs/ca.crt"]      
+              ca=["/etc/certs/ca.crt"]
+
       - name: Login to Harbor
         uses: docker/login-action@v3
         with:
