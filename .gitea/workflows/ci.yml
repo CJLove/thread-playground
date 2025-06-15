@@ -45,7 +45,6 @@ jobs:
               ca=["/etc/certs/ca.crt"]
             [registry."harbor.love.io"]
               ca=["/etc/certs/ca.crt"]
-              http = true
 
       - name: Login to Harbor
         uses: docker/login-action@v3.4.0
