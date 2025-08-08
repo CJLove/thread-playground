@@ -46,21 +46,13 @@ jobs:
               ca=["/etc/certs/ca.crt"]
             [registry."harbor.love.io"]
               ca=["/etc/certs/ca.crt"]
-
-      - name: Login to Harbor
-        uses: docker/login-action@v3.4.0
-        with:
-          registry: harbor.love.io
-          username: ${{ secrets.HARBOR_ROBOT }}
-          password: ${{ secrets.HARBOR_SECRET }}
       - name: Build and push
         uses: docker/build-push-action@v6.18.0
         with:
           context: ./Containers/threadtest
           file: ./Containers/threadtest/Dockerfile
           push: true
-          #tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/test/threadtest:${{ github.run_number }}
-          tags: harbor.love.io/test/threadtest:latest, harbor.love.io/test/threadtest:${{ github.run_number }}
+          tags: fir.love.io:3005/threadtest:latest, fir.love.io:3005/test/threadtest:${{ github.run_number }}
           platforms: linux/amd64
       - name: Report failure
         if: failure()
