@@ -31,10 +31,14 @@ RUN yum install \
   -y \
   ${PACKAGES_TO_INSTALL}
 RUN yum clean all \
-  --installroot ${MICRODIR}
+  --installroot ${MICRODIR} && \
+  groupadd -g 1000 testuser --prefix ${MICRODIR} && \
+  useradd -u 1000 -g 1000 testuser --prefix ${MICRODIR}
 
 FROM scratch AS image
 ARG MICRODIR
 COPY --from=build ${MICRODIR}/ .
+
+USER testuser
 
 CMD [ "/thread" ] 
