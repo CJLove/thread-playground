@@ -11,18 +11,18 @@
 
 # CMD [ "/thread" ]
 
-# Build using 
+# build using 
 
 ARG MICRODIR=/microdir
 ARG PACKAGES_TO_INSTALL="libstd-c++"
 
-FROM registry.access.redhat.com/ubi9-micro:9.6 AS BASE
+FROM registry.access.redhat.com/ubi9-micro:9.6 AS base
 
-FROM registry.access.redhat.com/ubi9:9.6 AS BUILD
+FROM registry.access.redhat.com/ubi9:9.6 AS build
 ARG MICRODIR
 ARG PACKAGES_TO_INSTALL
 RUN mkdir ${MICRODIR}
-COPY --from=BASE / ${MICRODIR}
+COPY --from=base / ${MICRODIR}
 ADD thread ${MICRODIR}
 RUN yum install \
   --installroot ${MICRODIR} \
@@ -33,8 +33,8 @@ RUN yum install \
 RUN yum clean all \
   --installroot ${MICRODIR}
 
-FROM scratch AS IMAGE
+FROM scratch AS image
 ARG MICRODIR
-COPY --from=BUILD ${MICRODIR}/ .
+COPY --from=build ${MICRODIR}/ .
 
 CMD [ "/thread" ] 
