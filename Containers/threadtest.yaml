@@ -26,6 +26,10 @@ items:
             realtime: "true"
             rt_runtime_us: "50000"
         spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
           containers:
           - name: threadtest
             image: fir.love.io:3005/threadtest:latest
@@ -38,6 +42,8 @@ items:
                 memory: "200Mi"
                 cpu: "700m"
             securityContext:
+              privileged: false
+              allowPrivilegeEscalation: false
               capabilities:
                 add:
                   - SYS_NICE

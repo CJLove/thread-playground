@@ -55,4 +55,4 @@ It seems like this container can be run rootless with Podman provided that the u
 $ podman run --rm -d --name threadtest2 fir.love.io:3005/threadtest:latest
 ```
 
-TBD: This container can be run as root 
+This container can be run as root 

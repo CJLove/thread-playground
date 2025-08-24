@@ -16,7 +16,7 @@ namespace thrd {
  */
 class thread : private std::thread {
 public:
-    static constexpr size_t THREAD_NAME_MAX = 15;
+    static constexpr size_t THREAD_NAME_MAX = 16;
     //using std::thread::thread;
     thread() = default;
     thread(thread&&) = default;
