@@ -35,8 +35,8 @@ RUN yum clean all \
     groupadd -g 1000 testuser --prefix ${MICRODIR} && \
     useradd -u 1000 -g 1000 testuser --prefix ${MICRODIR} && \
     mkdir -p ${MICRODIR}/etc/security && \
-    echo "*     soft rtprio unlimited" >> /etc/security/limits.conf && \
-    echo "*     hard rtprio unlimited" >> /etc/security/limits.conf
+    echo "*     soft rtprio unlimited" >> ${MICRODIR}/etc/security/limits.conf && \
+    echo "*     hard rtprio unlimited" >> ${MICRODIR}/etc/security/limits.conf
 
 FROM scratch AS image
 ARG MICRODIR
