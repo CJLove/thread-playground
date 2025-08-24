@@ -1,30 +1,18 @@
-# #FROM registry.access.redhat.com/ubi8-minimal:8.10
-# FROM registry.access.redhat.com/ubi9-minimal:9.6
-
-# ADD thread /
-
-# RUN \
-#     microdnf install -y libstdc++ 
-# #    && \
-# #    echo "*     soft rtprio unlimited" >> /etc/security/limits.conf && \
-# #    echo "*     hard rtprio unlimited" >> /etc/security/limits.conf
-
-# CMD [ "/thread" ]
-
-# build using 
-
+# Staging directory for final image
 ARG MICRODIR=/microdir
 ARG PACKAGES_TO_INSTALL="libstdc++"
 
+# ubi9-micro serves as the base for the final image
 FROM registry.access.redhat.com/ubi9-micro:9.6 AS base
 
+# ubi9 enables adding rpm dependencies and non-root user
 FROM registry.access.redhat.com/ubi9:9.6 AS build
 ARG MICRODIR
 ARG PACKAGES_TO_INSTALL
 RUN mkdir ${MICRODIR}
 COPY --from=base / ${MICRODIR}
 ADD thread ${MICRODIR}
-RUN setcap 'cap_sys_nice=eip' ${MICRODIR}/thread && \
+RUN setcap 'cap_sys_nice=+eip' ${MICRODIR}/thread && \
     yum install \
   --installroot ${MICRODIR} \
   --releasever 8 \
@@ -35,10 +23,8 @@ RUN yum clean all \
   --installroot ${MICRODIR} && \
     groupadd -g 1000 testuser --prefix ${MICRODIR} && \
     useradd -u 1000 -g 1000 testuser --prefix ${MICRODIR}  
-#    mkdir -p ${MICRODIR}/etc/security && \
-#    echo "*     soft rtprio unlimited" >> ${MICRODIR}/etc/security/limits.conf && \
-#    echo "*     hard rtprio unlimited" >> ${MICRODIR}/etc/security/limits.conf
 
+# Final image is built from scratch using the staging directory
 FROM scratch AS image
 ARG MICRODIR
 COPY --from=build ${MICRODIR}/ .
