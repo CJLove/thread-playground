@@ -24,7 +24,8 @@ ARG PACKAGES_TO_INSTALL
 RUN mkdir ${MICRODIR}
 COPY --from=base / ${MICRODIR}
 ADD thread ${MICRODIR}
-RUN yum install \
+RUN setcap 'cap_sys_nice=eip' ${MICRODIR}/thread && \
+    yum install \
   --installroot ${MICRODIR} \
   --releasever 8 \
   --setop install_weak_deps=false \
