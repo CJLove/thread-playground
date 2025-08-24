@@ -32,8 +32,11 @@ RUN yum install \
   ${PACKAGES_TO_INSTALL}
 RUN yum clean all \
   --installroot ${MICRODIR} && \
-  groupadd -g 1000 testuser --prefix ${MICRODIR} && \
-  useradd -u 1000 -g 1000 testuser --prefix ${MICRODIR}
+    groupadd -g 1000 testuser --prefix ${MICRODIR} && \
+    useradd -u 1000 -g 1000 testuser --prefix ${MICRODIR} && \
+    mkdir -p ${MICRODIR}/etc/security && \
+    echo "*     soft rtprio unlimited" >> /etc/security/limits.conf && \
+    echo "*     hard rtprio unlimited" >> /etc/security/limits.conf
 
 FROM scratch AS image
 ARG MICRODIR
