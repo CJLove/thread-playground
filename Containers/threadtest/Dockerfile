@@ -14,7 +14,7 @@
 # build using 
 
 ARG MICRODIR=/microdir
-ARG PACKAGES_TO_INSTALL="libstd-c++"
+ARG PACKAGES_TO_INSTALL="libstdc++"
 
 FROM registry.access.redhat.com/ubi9-micro:9.6 AS base
 
